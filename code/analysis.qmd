@@ -1,0 +1,102 @@
+---
+title: "Analysis"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(tidyverse)
+theme_set(theme_light())
+library(readxl)
+library(brms)
+```
+
+## Read data
+
+```{r}
+#| label: read-data
+
+relatives <- read_xlsx("data/Relatives.xlsx") %>%
+  # Remove observations to be excluded
+  filter(include == "y")
+
+colnames(relatives) <- c("text", "file", "parallel_set", "parallel_set_id", "dem", "second_m", "include", "early_v", "correlative", "the", "divinity", "generic", "be")
+
+relatives <- relatives %>%
+  add_count(dem, divinity, name = "grand_tot") %>%
+  mutate(
+    dem = recode_factor(dem, n = "no", se = "SE", that = "THAT"),
+    second_m = recode_factor(second_m, n = "other_m", y = "second_m"),
+    early_v = recode_factor(early_v, n = "other_v", y = "early_v"),
+    divinity = recode_factor(divinity, n = "other", y = "divinity"),
+    second_early = interaction(second_m, early_v, lex.order = TRUE)
+  )
+
+relatives_counts <- relatives %>%
+  filter(divinity == "other") %>%
+  count(dem, second_m, early_v, grand_tot) %>%
+  drop_na()
+```
+
+```{r}
+#| label: checks
+
+# Number of rows and columns
+dim(relatives)
+```
+
+## Plotting
+
+```{r}
+#| label: counts
+
+relatives %>%
+  drop_na() %>%
+  ggplot(aes(dem, fill = second_early)) +
+  geom_bar() +
+  facet_grid(~ divinity) +
+  scale_fill_brewer(palette = "PRGn")
+```
+
+```{r}
+#| label: proportions
+
+relatives %>%
+  drop_na() %>%
+  ggplot(aes(dem, fill = second_early)) +
+  geom_bar(position = "fill") +
+  facet_grid(~ divinity) +
+  scale_fill_brewer(palette = "PRGn")
+```
+
+## Modelling
+
+```{r}
+#| label: rel-bm
+
+rel_bm <- brm(
+  n ~
+    dem * second_m * early_v +
+    offset(log(grand_tot/100)),
+  data = relatives_counts,
+  family = poisson,
+  backend = "cmdstanr",
+  cores = 4,
+  threads = threading(4),
+  file = "data/rel_bm"
+)
+
+rel_bm
+```
+
+```{r}
+#| label: rel-bm-conds
+
+conds <- make_conditions(relatives_counts, c("dem")) %>%
+  mutate(grand_tot = 100)
+
+conditional_effects(rel_bm, effects = "early_v:second_m", conditions = conds)
+```
