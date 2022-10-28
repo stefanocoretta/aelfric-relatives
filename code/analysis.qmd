@@ -2,6 +2,8 @@
 title: "Analysis"
 format: html
 editor: visual
+execute: 
+  echo: false
 ---
 
 ```{r}
@@ -41,11 +43,20 @@ relatives_counts <- relatives %>%
   drop_na()
 ```
 
+Check number of rows and columns
+
 ```{r}
 #| label: checks
 
 # Number of rows and columns
 dim(relatives)
+```
+
+Glimpse of the data
+
+```{r}
+#| label: relatives
+relatives
 ```
 
 ## Plotting
@@ -58,7 +69,10 @@ relatives %>%
   ggplot(aes(dem, fill = second_early)) +
   geom_bar() +
   facet_grid(~ divinity) +
-  scale_fill_brewer(palette = "PRGn")
+  scale_fill_brewer(palette = "PRGn") +
+  labs(
+    title = "Number of relatives by mention and early/other verb"
+  )
 ```
 
 ```{r}
@@ -69,7 +83,11 @@ relatives %>%
   ggplot(aes(dem, fill = second_early)) +
   geom_bar(position = "fill") +
   facet_grid(~ divinity) +
-  scale_fill_brewer(palette = "PRGn")
+  scale_fill_brewer(palette = "PRGn") +
+  labs(
+    title = "Proportion of relatives by mention and early/other verb",
+    y = "Proportion"
+  )
 ```
 
 ## Modelling
@@ -88,9 +106,21 @@ rel_bm <- brm(
   threads = threading(4),
   file = "data/rel_bm"
 )
-
-rel_bm
 ```
+
+I fitted a Bayesian linear model using a Poisson distribution for the outcome variable (number of relatives), with demonstrative, second mention and early verb as predictors (including interactions thereof).
+
+The following reports a summary of the estimated effects (in log-odds).
+
+```{r}
+#| label: rel-bm-effs
+
+fixef(rel_bm) %>% as_tibble(rownames = "Term")
+```
+
+The following plot shows the predicted counts (based on a baseline of 100 relative phrases) as estimated by the model. The predicted counts can be also thought of as percentages (due to the 100-phrases baseline).
+
+For each condition/group, the plot shows the predicted median count as a circle plus the 95% Credible Intervals (CrI) as an error bar. The 95% CrIs can be interpreted as: "There is a 95% probability that the true count value is within this interval, based on the data and model". Note that inference should be based on the CrI rather than just on the median value.
 
 ```{r}
 #| label: rel-bm-conds

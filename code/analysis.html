@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.189">
+<meta name="generator" content="quarto-1.1.251">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,69 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -125,55 +62,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="read-data" class="level2">
 <h2 class="anchored" data-anchor-id="read-data">Read data</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>relatives <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"data/Relatives.xlsx"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove observations to be excluded</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(include <span class="sc">==</span> <span class="st">"y"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(relatives) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"text"</span>, <span class="st">"file"</span>, <span class="st">"parallel_set"</span>, <span class="st">"parallel_set_id"</span>, <span class="st">"dem"</span>, <span class="st">"second_m"</span>, <span class="st">"include"</span>, <span class="st">"early_v"</span>, <span class="st">"correlative"</span>, <span class="st">"the"</span>, <span class="st">"divinity"</span>, <span class="st">"generic"</span>, <span class="st">"be"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>relatives <span class="ot">&lt;-</span> relatives <span class="sc">%&gt;%</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_count</span>(dem, divinity, <span class="at">name =</span> <span class="st">"grand_tot"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">dem =</span> <span class="fu">recode_factor</span>(dem, <span class="at">n =</span> <span class="st">"no"</span>, <span class="at">se =</span> <span class="st">"SE"</span>, <span class="at">that =</span> <span class="st">"THAT"</span>),</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">second_m =</span> <span class="fu">recode_factor</span>(second_m, <span class="at">n =</span> <span class="st">"other_m"</span>, <span class="at">y =</span> <span class="st">"second_m"</span>),</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">early_v =</span> <span class="fu">recode_factor</span>(early_v, <span class="at">n =</span> <span class="st">"other_v"</span>, <span class="at">y =</span> <span class="st">"early_v"</span>),</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">divinity =</span> <span class="fu">recode_factor</span>(divinity, <span class="at">n =</span> <span class="st">"other"</span>, <span class="at">y =</span> <span class="st">"divinity"</span>),</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">second_early =</span> <span class="fu">interaction</span>(second_m, early_v, <span class="at">lex.order =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>relatives_counts <span class="ot">&lt;-</span> relatives <span class="sc">%&gt;%</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(divinity <span class="sc">==</span> <span class="st">"other"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(dem, second_m, early_v, grand_tot) <span class="sc">%&gt;%</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
 </div>
+<p>Check number of rows and columns</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of rows and columns</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(relatives)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1227   15</code></pre>
+</div>
+</div>
+<p>Glimpse of the data</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,227 × 15
+   text        file  paral…¹ paral…² dem   secon…³ include early_v corre…⁴ the  
+   &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;fct&gt; &lt;fct&gt;   &lt;chr&gt;   &lt;fct&gt;   &lt;chr&gt;   &lt;chr&gt;
+ 1 /~*Sum +a+… coae… n       100AN   SE    second… y       early_v n       n    
+ 2 /~*Sum +a+… /~*c… n       100BN   no    other_m y       other_v n       y    
+ 3 /~*Sum +a+… /~*c… n       100CN   no    second… y       early_v n       y    
+ 4 /~*Sum wer… coae… n       101AN   SE    second… y       early_v n       n    
+ 5 /~*Sum wer… /~*c… n       101BN   no    other_m y       other_v n       y    
+ 6 /~*Sum wif… coae… n       102AN   SE    second… y       early_v n       n    
+ 7 /~*Sum wif… /~*c… n       102BN   no    other_m y       other_v n       y    
+ 8 /~*Sume me… /~*c… n       103AN   no    other_m y       early_v n       y    
+ 9 /~*Sume me… /~*c… n       103BN   no    other_m y       other_v n       y    
+10 /~*Sume mu… /~*c… n       104AN   no    other_m y       other_v n       y    
+# … with 1,217 more rows, 5 more variables: divinity &lt;fct&gt;, generic &lt;chr&gt;,
+#   be &lt;chr&gt;, grand_tot &lt;int&gt;, second_early &lt;fct&gt;, and abbreviated variable
+#   names ¹​parallel_set, ²​parallel_set_id, ³​second_m, ⁴​correlative</code></pre>
 </div>
 </div>
 </section>
 <section id="plotting" class="level2">
 <h2 class="anchored" data-anchor-id="plotting">Plotting</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>relatives <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(dem, <span class="at">fill =</span> second_early)) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span> divinity) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"PRGn"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="analysis_files/figure-html/counts-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>relatives <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(dem, <span class="at">fill =</span> second_early)) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="sc">~</span> divinity) <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"PRGn"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="analysis_files/figure-html/proportions-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -182,65 +108,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="modelling" class="level2">
 <h2 class="anchored" data-anchor-id="modelling">Modelling</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rel_bm <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  n <span class="sc">~</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    dem <span class="sc">*</span> second_m <span class="sc">*</span> early_v <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">offset</span>(<span class="fu">log</span>(grand_tot<span class="sc">/</span><span class="dv">100</span>)),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> relatives_counts,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> poisson,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">threads =</span> <span class="fu">threading</span>(<span class="dv">4</span>),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">"data/rel_bm"</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>rel_bm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> Family: poisson 
-  Links: mu = log 
-Formula: n ~ dem * second_m * early_v + offset(log(grand_tot/100)) 
-   Data: relatives_counts (Number of observations: 12) 
-  Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
-         total post-warmup draws = 4000
 
-Population-Level Effects: 
-                                        Estimate Est.Error l-95% CI u-95% CI
-Intercept                                   4.31      0.04     4.24     4.39
-demSE                                      -1.32      0.19    -1.70    -0.97
-demTHAT                                    -0.26      0.23    -0.72     0.16
-second_msecond_m                           -7.09      1.31   -10.22    -5.17
-early_vearly_v                             -1.12      0.08    -1.28    -0.98
-demSE:second_msecond_m                      6.41      1.35     4.38     9.59
-demTHAT:second_msecond_m                    5.99      1.40     3.78     9.30
-demSE:early_vearly_v                        0.31      0.35    -0.42     0.95
-demTHAT:early_vearly_v                     -2.40      1.27    -5.42    -0.45
-second_msecond_m:early_vearly_v             3.73      1.36     1.66     6.98
-demSE:second_msecond_m:early_vearly_v      -1.15      1.45    -4.52     1.13
-demTHAT:second_msecond_m:early_vearly_v    -0.37      1.97    -4.47     3.51
-                                        Rhat Bulk_ESS Tail_ESS
-Intercept                               1.00     3658     3575
-demSE                                   1.00     3077     2396
-demTHAT                                 1.00     3271     2602
-second_msecond_m                        1.01      790      642
-early_vearly_v                          1.00     3665     2866
-demSE:second_msecond_m                  1.01      846      668
-demTHAT:second_msecond_m                1.01      918      706
-demSE:early_vearly_v                    1.00     2754     2461
-demTHAT:early_vearly_v                  1.00     1754     1339
-second_msecond_m:early_vearly_v         1.01      858      685
-demSE:second_msecond_m:early_vearly_v   1.00      900      672
-demTHAT:second_msecond_m:early_vearly_v 1.00     1019      873
-
-Draws were sampled using sample(hmc). For each parameter, Bulk_ESS
-and Tail_ESS are effective sample size measures, and Rhat is the potential
-scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
-</div>
+<p>I fitted a Bayesian linear model using a Poisson distribution for the outcome variable (number of relatives), with demonstrative, second mention and early verb as predictors (including interactions thereof).</p>
+<p>The following reports a summary of the estimated effects (in log-odds).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>conds <span class="ot">&lt;-</span> <span class="fu">make_conditions</span>(relatives_counts, <span class="fu">c</span>(<span class="st">"dem"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">grand_tot =</span> <span class="dv">100</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">conditional_effects</span>(rel_bm, <span class="at">effects =</span> <span class="st">"early_v:second_m"</span>, <span class="at">conditions =</span> conds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 5
+   Term                                    Estimate Est.Error    Q2.5  Q97.5
+   &lt;chr&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+ 1 Intercept                                  4.31     0.0385   4.24   4.39 
+ 2 demSE                                     -1.32     0.188   -1.70  -0.972
+ 3 demTHAT                                   -0.264    0.229   -0.725  0.161
+ 4 second_msecond_m                          -7.09     1.31   -10.2   -5.17 
+ 5 early_vearly_v                            -1.12     0.0755  -1.28  -0.976
+ 6 demSE:second_msecond_m                     6.41     1.35     4.38   9.59 
+ 7 demTHAT:second_msecond_m                   5.99     1.40     3.78   9.30 
+ 8 demSE:early_vearly_v                       0.309    0.348   -0.416  0.950
+ 9 demTHAT:early_vearly_v                    -2.40     1.27    -5.42  -0.450
+10 second_msecond_m:early_vearly_v            3.73     1.36     1.66   6.98 
+11 demSE:second_msecond_m:early_vearly_v     -1.15     1.45    -4.52   1.13 
+12 demTHAT:second_msecond_m:early_vearly_v   -0.373    1.97    -4.47   3.51 </code></pre>
+</div>
+</div>
+<p>The following plot shows the predicted counts (based on a baseline of 100 relative phrases) as estimated by the model. The predicted counts can be also thought of as percentages (due to the 100-phrases baseline).</p>
+<p>For each condition/group, the plot shows the predicted median count as a circle plus the 95% Credible Intervals (CrI) as an error bar. The 95% CrIs can be interpreted as: “There is a 95% probability that the true count value is within this interval, based on the data and model”. Note that inference should be based on the CrI rather than just on the median value.</p>
+<div class="cell">
 <div class="cell-output-display">
 <p><img src="analysis_files/figure-html/rel-bm-conds-1.png" class="img-fluid" width="672"></p>
 </div>
