@@ -23,13 +23,25 @@ library(brms)
 ```{r}
 #| label: read-data
 
-relatives <- read_xlsx("data/Relatives.xlsx") %>%
+relatives_ae <- read_xlsx("data/Relatives.xlsx") %>%
   # Remove observations to be excluded
-  filter(include == "y")
+  filter(include == "y") %>%
+  mutate(
+    manuscript = "Aelfric"
+  )
 
-colnames(relatives) <- c("text", "file", "parallel_set", "parallel_set_id", "dem", "second_m", "include", "early_v", "correlative", "the", "divinity", "generic", "be")
+relatives_gdh <- read_xlsx("data/Relatives-2.xlsx", sheet = 3) %>%
+  # Remove observations to be excluded
+  filter(include == "y") %>%
+  mutate(
+    manuscript = "GDH"
+  )
 
-relatives <- relatives %>%
+colnames(relatives_ae) <- c("text", "file", "parallel_set", "parallel_set_id", "dem", "second_m", "include", "early_v", "correlative", "the", "divinity", "generic", "be", "manuscript")
+
+colnames(relatives_gdh) <- c("text", "file", "parallel_set", "parallel_set_id", "dem", "second_m", "include", "early_v", "correlative", "the", "divinity", "generic", "be", "antecedent", "manuscript")
+
+relatives <- bind_rows(relatives_ae, relatives_gdh) %>%
   add_count(dem, divinity, name = "grand_tot") %>%
   mutate(
     dem = recode_factor(dem, n = "no", se = "SE", that = "THAT"),
@@ -41,7 +53,7 @@ relatives <- relatives %>%
 
 relatives_counts <- relatives %>%
   filter(divinity == "other") %>%
-  count(dem, second_m, early_v, grand_tot) %>%
+  count(manuscript, dem, second_m, early_v, grand_tot) %>%
   drop_na()
 ```
 
@@ -67,10 +79,10 @@ relatives
 #| label: counts
 
 relatives %>%
-  drop_na() %>%
+  drop_na(second_early, dem) %>%
   ggplot(aes(dem, fill = second_early)) +
   geom_bar() +
-  facet_grid(~ divinity) +
+  facet_grid(manuscript ~ divinity) +
   scale_fill_brewer(palette = "PRGn") +
   labs(
     title = "Number of relatives by mention and early/other verb"
@@ -81,10 +93,10 @@ relatives %>%
 #| label: proportions
 
 relatives %>%
-  drop_na() %>%
+  drop_na(second_early, dem) %>%
   ggplot(aes(dem, fill = second_early)) +
   geom_bar(position = "fill") +
-  facet_grid(~ divinity) +
+  facet_grid(manuscript ~ divinity) +
   scale_fill_brewer(palette = "PRGn") +
   labs(
     title = "Proportion of relatives by mention and early/other verb",
@@ -99,7 +111,7 @@ relatives %>%
 
 rel_bm <- brm(
   n ~
-    dem * second_m * early_v +
+    dem * second_m * early_v * manuscript +
     offset(log(grand_tot/100)),
   data = relatives_counts,
   family = poisson,
@@ -127,7 +139,7 @@ For each condition/group, the plot shows the predicted median count as a circle 
 ```{r}
 #| label: rel-bm-conds
 
-conds <- make_conditions(relatives_counts, c("dem")) %>%
+conds <- make_conditions(relatives_counts, c("manuscript", "dem")) %>%
   mutate(grand_tot = 100)
 
 conditional_effects(rel_bm, effects = "early_v:second_m", conditions = conds)
