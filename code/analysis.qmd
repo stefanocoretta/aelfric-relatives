@@ -105,6 +105,21 @@ relatives %>%
   )
 ```
 
+```{r}
+#| label: proportions
+
+relatives %>%
+  drop_na(mention_position, dem) %>%
+  ggplot(aes(mention, fill = dem)) +
+  geom_bar(position = "fill") +
+  facet_grid(manuscript ~ position) +
+  scale_fill_brewer(palette = "PRGn") +
+  labs(
+    title = "Proportion of relatives by mention and early/other verb",
+    y = "Proportion"
+  )
+```
+
 ## Modelling
 
 ```{r}
@@ -145,10 +160,10 @@ For each condition/group, the plot shows the predicted median count as a circle 
 ```{r}
 #| label: rel-bm-conds
 
-conds <- make_conditions(relatives_counts, c("manuscript", "dem")) %>%
+conds <- make_conditions(relatives_counts, c("manuscript", "position")) %>%
   mutate(grand_tot = 100)
 
-conditional_effects(rel_bm, effects = "position:mention", conditions = conds)
+conditional_effects(rel_bm, effects = "dem:mention", conditions = conds)
 ```
 
 ```{r rel-bm-cond}
@@ -182,6 +197,12 @@ rel_bm_cond_l <- rel_bm_cond %>%
 ```
 
 ```{r rel-bm-cond-ael}
+hilite <- tibble(
+  mention = "second", position = "early", dem = "SE",
+  xmin = 1.75, xmax = 2.25,
+  ymin = 0, ymax = 50
+)
+
 rel_bm_cond_l %>%
   filter(manuscript == "Aelfric") %>%
   ggplot(aes(dem, value)) +
@@ -189,6 +210,11 @@ rel_bm_cond_l %>%
   facet_grid(position ~ mention, labeller = label_both) +
   coord_cartesian(ylim = c(0, 50)) +
   scale_color_brewer(direction = -1) +
+  geom_rect(data = hilite,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+            fill = NA,
+            colour = "#d95f02",
+            inherit.aes = FALSE) +
   labs(
     title = "Aelfric manuscript",
     x = "Demonstrative", y = "Percentage"
@@ -203,6 +229,11 @@ rel_bm_cond_l %>%
   facet_grid(position ~ mention, labeller = label_both) +
   coord_cartesian(ylim = c(0, 50)) +
   scale_color_brewer(direction = -1) +
+  geom_rect(data = hilite,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+            fill = NA,
+            colour = "#d95f02",
+            inherit.aes = FALSE) +
   labs(
     title = "GDH manuscript",
     x = "Demonstrative", y = "Percentage"
