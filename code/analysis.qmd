@@ -43,7 +43,7 @@ colnames(relatives_ae) <- c("text", "file", "parallel_set", "parallel_set_id", "
 colnames(relatives_gdh) <- c("text", "file", "parallel_set", "parallel_set_id", "dem", "mention", "include", "position", "correlative", "the", "divinity", "generic", "be", "antecedent", "manuscript")
 
 relatives <- bind_rows(relatives_ae, relatives_gdh) %>%
-  add_count(dem, divinity, name = "grand_tot") %>%
+  add_count(manuscript, name = "grand_tot") %>%
   mutate(
     dem = recode_factor(dem, n = "no", se = "SE", that = "THAT"),
     mention = recode_factor(mention, n = "other", y = "second"),
@@ -106,7 +106,7 @@ relatives %>%
 ```
 
 ```{r}
-#| label: proportions
+#| label: proportions-2
 
 relatives %>%
   drop_na(mention_position, dem) %>%
@@ -128,7 +128,7 @@ relatives %>%
 rel_bm <- brm(
   n ~
     dem * mention * position * manuscript +
-    offset(log(grand_tot/100)),
+    offset(log(grand_tot)),
   data = relatives_counts,
   family = poisson,
   backend = "cmdstanr",
@@ -143,30 +143,21 @@ rel_bm <- brm(
 )
 ```
 
-I fitted a Bayesian linear model using a Poisson distribution for the outcome variable (number of relatives), with demonstrative, second mention and early verb as predictors (including interactions thereof).
-
-The following reports a summary of the estimated effects (in log-odds).
-
-```{r}
-#| label: rel-bm-effs
-
-fixef(rel_bm) %>% as_tibble(rownames = "Term")
-```
-
-The following plot shows the predicted counts (based on a baseline of 100 relative phrases) as estimated by the model. The predicted counts can be also thought of as percentages (due to the 100-phrases baseline).
-
-For each condition/group, the plot shows the predicted median count as a circle plus the 95% Credible Intervals (CrI) as an error bar. The 95% CrIs can be interpreted as: "There is a 95% probability that the true count value is within this interval, based on the data and model". Note that inference should be based on the CrI rather than just on the median value.
+I fitted a Bayesian linear model using a Poisson distribution for the outcome variable (number of relatives), with demonstrative, mention and position and manuscript as predictors (including interactions thereof).
 
 ```{r}
 #| label: rel-bm-conds
+#| include: false
 
-conds <- make_conditions(relatives_counts, c("manuscript", "position")) %>%
+conds <- make_conditions(relatives_counts, c("manuscript", "dem")) %>%
   mutate(grand_tot = 100)
 
-conditional_effects(rel_bm, effects = "dem:mention", conditions = conds)
+conditional_effects(rel_bm, effects = "position:mention", conditions = conds)
 ```
 
-```{r rel-bm-cond}
+```{r}
+#| label: rel-bm-cond
+
 rel_bm_draws <- as_draws_df(rel_bm)
 
 new_data <- expand_grid(
@@ -197,43 +188,55 @@ rel_bm_cond_l <- rel_bm_cond %>%
 ```
 
 ```{r rel-bm-cond-ael}
+#| label: rel-bm-cond-ael
+
 hilite <- tibble(
   mention = "second", position = "early", dem = "SE",
   xmin = 1.75, xmax = 2.25,
-  ymin = 0, ymax = 50
+  ymin = 0, ymax = 15
 )
 
 rel_bm_cond_l %>%
   filter(manuscript == "Aelfric") %>%
   ggplot(aes(dem, value)) +
-  stat_interval(.width = c(0.5, 0.7, 0.9, 0.99), linewidth = 5) +
+  stat_interval(.width = c(0.5, 0.7, 0.9, 0.95), linewidth = 4) +
   facet_grid(position ~ mention, labeller = label_both) +
-  coord_cartesian(ylim = c(0, 50)) +
+  coord_cartesian(ylim = c(0, 15)) +
   scale_color_brewer(direction = -1) +
   geom_rect(data = hilite,
             aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
             fill = NA,
             colour = "#d95f02",
             inherit.aes = FALSE) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
   labs(
     title = "Aelfric manuscript",
     x = "Demonstrative", y = "Percentage"
   )
 ```
 
-```{r rel-bm-cond-gdh}
+```{r}
+#| label: rel-bm-cond-gdh
+
+hilite_2 <- tibble(
+  mention = "second", position = "early", dem = "SE",
+  xmin = 1.75, xmax = 2.25,
+  ymin = 0, ymax = 15
+)
+
 rel_bm_cond_l %>%
   filter(manuscript == "GDH") %>%
   ggplot(aes(dem, value)) +
-  stat_interval(.width = c(0.5, 0.7, 0.9, 0.99), linewidth = 5) +
+  stat_interval(.width = c(0.5, 0.7, 0.9, 0.95), linewidth = 4) +
   facet_grid(position ~ mention, labeller = label_both) +
-  coord_cartesian(ylim = c(0, 50)) +
+  coord_cartesian(ylim = c(0, 15)) +
   scale_color_brewer(direction = -1) +
-  geom_rect(data = hilite,
+  geom_rect(data = hilite_2,
             aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
             fill = NA,
             colour = "#d95f02",
             inherit.aes = FALSE) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
   labs(
     title = "GDH manuscript",
     x = "Demonstrative", y = "Percentage"
