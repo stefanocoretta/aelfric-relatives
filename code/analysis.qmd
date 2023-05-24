@@ -213,6 +213,8 @@ rel_bm_cond_l %>%
     title = "Aelfric manuscript",
     x = "Demonstrative", y = "Percentage"
   )
+
+ggsave("img/ael-brm.png", width = 7, height = 5)
 ```
 
 ```{r}
@@ -241,4 +243,6 @@ rel_bm_cond_l %>%
     title = "GDH manuscript",
     x = "Demonstrative", y = "Percentage"
   )
+
+ggsave("img/gdh-brm.png", width = 7, height = 5)
 ```
