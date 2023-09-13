@@ -112,7 +112,7 @@ rel_bm_2_cond_l %>%
   ggplot(aes(dem, value)) +
   stat_interval(.width = c(0.5, 0.7, 0.9, 0.95), linewidth = 4) +
   facet_grid(~ position, labeller = label_both) +
-  coord_cartesian(ylim = c(0, 6)) +
+  # coord_cartesian(ylim = c(0, 6)) +
   scale_color_brewer(direction = -1) +
   # geom_rect(data = hilite,
   #           aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
