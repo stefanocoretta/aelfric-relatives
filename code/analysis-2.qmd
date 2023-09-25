@@ -42,7 +42,7 @@ relatives_ehep <- relatives_ehep %>%
 
 relatives_counts <- relatives_ehep %>%
   filter(divinity == "other") %>%
-  count(dem, position, grand_tot) %>%
+  count(dem, position, is_called, grand_tot) %>%
   drop_na()
 ```
 
@@ -53,7 +53,7 @@ relatives_counts <- relatives_ehep %>%
 
 rel_bm_2 <- brm(
   n ~
-    dem * position +
+    dem * position * is_called +
     offset(log(grand_tot)),
   data = relatives_counts,
   family = poisson,
@@ -77,11 +77,12 @@ rel_bm_2_draws <- as_draws_df(rel_bm_2)
 new_data_2 <- expand_grid(
   dem = c("no", "se", "that", "thatte"),
   position = c("other", "early"),
+  is_called = c("y", "n"),
   grand_tot = 100
 )
 
 headings <- new_data_2 %>%
-  unite("heads", dem:position, sep = ".") %>%
+  unite("heads", dem:is_called, sep = ".") %>%
   pull(heads)
 
 rel_bm_2_cond <- posterior_epred(rel_bm_2, newdata = new_data_2)
@@ -93,10 +94,10 @@ rel_bm_2_cond_l <- rel_bm_2_cond %>%
   pivot_longer(everything(), names_to = "condition") %>%
   separate(
     condition,
-    c("dem", "position"),
+    c("dem", "position", "is_called"),
     sep = "\\."
   ) %>%
-  arrange(dem, position)
+  arrange(dem, position, is_called)
 ```
 
 ```{r}
@@ -111,7 +112,7 @@ rel_bm_2_cond_l <- rel_bm_2_cond %>%
 rel_bm_2_cond_l %>%
   ggplot(aes(dem, value)) +
   stat_interval(.width = c(0.5, 0.7, 0.9, 0.95), linewidth = 4) +
-  facet_grid(~ position, labeller = label_both) +
+  facet_grid(is_called ~ position, labeller = label_both) +
   # coord_cartesian(ylim = c(0, 6)) +
   scale_color_brewer(direction = -1) +
   # geom_rect(data = hilite,
