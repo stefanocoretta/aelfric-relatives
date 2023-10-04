@@ -95,14 +95,42 @@ relatives %>%
 
 relatives %>%
   drop_na(mention_position, dem) %>%
+  mutate(
+    mention_position = str_replace(mention_position, "\\.", "/")
+  ) %>%
   ggplot(aes(dem, fill = mention_position)) +
   geom_bar(position = "fill") +
   facet_grid(manuscript ~ divinity) +
   scale_fill_brewer(palette = "PRGn") +
   labs(
     title = "Proportion of relatives by mention and early/other verb",
-    y = "Proportion"
+    y = "Proportion",
+    fill = "mention/position"
   )
+
+ggsave("img/props-ael-gdh.png", width = 7, height = 5)
+```
+
+```{r}
+#| label: proportions-ael
+
+relatives %>%
+  filter(manuscript == "Aelfric") %>%
+  drop_na(mention_position, dem) %>%
+  mutate(
+    mention_position = str_replace(mention_position, "\\.", "/")
+  ) %>%
+  ggplot(aes(dem, fill = mention_position)) +
+  geom_bar(position = "fill") +
+  facet_grid(manuscript ~ divinity) +
+  scale_fill_brewer(palette = "PRGn") +
+  labs(
+    title = "Proportion of relatives by mention and early/other verb",
+    y = "Proportion",
+    fill = "mention/position"
+  )
+
+ggsave("img/props-ael.png", width = 7, height = 5)
 ```
 
 ```{r}

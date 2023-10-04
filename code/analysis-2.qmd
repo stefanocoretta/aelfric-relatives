@@ -37,12 +37,13 @@ relatives_ehep <- relatives_ehep %>%
     mention = recode_factor(mention, n = "other", y = "second"),
     position = recode_factor(position, n = "other", y = "early"),
     divinity = recode_factor(divinity, n = "other", y = "divinity"),
-    mention_position = interaction(mention, position, lex.order = TRUE)
+    mention_position = interaction(mention, position, lex.order = TRUE),
+    ante_name = ifelse(antecedent == "name", "name", "other")
   )
 
 relatives_counts <- relatives_ehep %>%
   filter(divinity == "other") %>%
-  count(dem, position, is_called, grand_tot) %>%
+  count(dem, position, ante_name, grand_tot) %>%
   drop_na()
 ```
 
@@ -53,7 +54,7 @@ relatives_counts <- relatives_ehep %>%
 
 rel_bm_2 <- brm(
   n ~
-    dem * position * is_called +
+    dem * position * ante_name +
     offset(log(grand_tot)),
   data = relatives_counts,
   family = poisson,
@@ -77,12 +78,12 @@ rel_bm_2_draws <- as_draws_df(rel_bm_2)
 new_data_2 <- expand_grid(
   dem = c("no", "se", "that", "thatte"),
   position = c("other", "early"),
-  is_called = c("y", "n"),
+  ante_name = c("name", "other"),
   grand_tot = 100
 )
 
 headings <- new_data_2 %>%
-  unite("heads", dem:is_called, sep = ".") %>%
+  unite("heads", dem:ante_name, sep = ".") %>%
   pull(heads)
 
 rel_bm_2_cond <- posterior_epred(rel_bm_2, newdata = new_data_2)
@@ -94,10 +95,10 @@ rel_bm_2_cond_l <- rel_bm_2_cond %>%
   pivot_longer(everything(), names_to = "condition") %>%
   separate(
     condition,
-    c("dem", "position", "is_called"),
+    c("dem", "position", "ante_name"),
     sep = "\\."
   ) %>%
-  arrange(dem, position, is_called)
+  arrange(dem, position, ante_name)
 ```
 
 ```{r}
@@ -110,9 +111,10 @@ rel_bm_2_cond_l <- rel_bm_2_cond %>%
 # )
 
 rel_bm_2_cond_l %>%
+  rename(antecedent = ante_name) %>%
   ggplot(aes(dem, value)) +
   stat_interval(.width = c(0.5, 0.7, 0.9, 0.95), linewidth = 4) +
-  facet_grid(is_called ~ position, labeller = label_both) +
+  facet_grid(position ~ antecedent, labeller = label_both) +
   # coord_cartesian(ylim = c(0, 6)) +
   scale_color_brewer(direction = -1) +
   # geom_rect(data = hilite,
