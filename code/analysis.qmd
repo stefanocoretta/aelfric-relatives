@@ -118,14 +118,15 @@ relatives %>%
   filter(manuscript == "Aelfric") %>%
   drop_na(mention_position, dem) %>%
   mutate(
-    mention_position = str_replace(mention_position, "\\.", "/")
+    mention_position = str_replace(mention_position, "\\.", "/"),
+    mention_position = factor(mention_position, levels = rev(c("second/early", "second/other", "other/early", "other/other")))
   ) %>%
   ggplot(aes(dem, fill = mention_position)) +
   geom_bar(position = "fill") +
   facet_grid(manuscript ~ divinity) +
-  scale_fill_brewer(palette = "PRGn") +
+  scale_fill_brewer(palette = "PRGn", direction = -1) +
   labs(
-    title = "Proportion of relatives by mention and early/other verb",
+    title = "Proportion of relatives by mention and position",
     y = "Proportion",
     fill = "mention/position"
   )
